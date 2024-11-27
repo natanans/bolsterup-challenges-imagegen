@@ -39,7 +39,7 @@ if submit_button:
                     image = Image.open(image_path)
 
                     # Extract the image caption from landmark details
-                    image_caption = landmark_details.get('image_generation_prompt', f"Image {i + 1}")
+                    image_caption = "image_caption"#landmark_details.get('image_generation_prompt', f"Image {i + 1}")
 
                     # Display image and JSON side by side
                     col1, col2 = st.columns(2)
