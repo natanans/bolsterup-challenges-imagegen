@@ -102,8 +102,8 @@ class LLMRetriever:
             # Validate and parse the response into a LandmarkResponse object
             return LandmarkResponse.model_validate_json(json.loads(chat_completion.choices[0].message.content))
         except ValidationError as e:
-            print(f"Validation Error: {e}")
-            return LandmarkResponse(error="Validation failed for the response.")
+            raise ValueError(f"Validation failed for the response: {e}") from e
+        except ValueError as ve:
+            raise ve
         except Exception as e:
-            print(f"Error fetching details: {e}")
-            return LandmarkResponse(error="An unexpected error occurred.")
+            raise RuntimeError(f"An unexpected error occurred while fetching landmark details: {e}") from e
