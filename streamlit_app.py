@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import base64
 import io
+import os
 
 # Import your LandmarkProcessor class
 from src.text_to_image import LandmarkProcessor  # Replace 'your_module' with the actual module name
