@@ -43,7 +43,7 @@ class LandmarkProcessor:
 
         # Check for 'no_value' in more than one key to check for available model data on landmark
         no_value_count = sum(1 for key, value in landmark_json.items() if value == 'no_value')
-        if no_value_count > 1:
+        if no_value_count > 3:
             raise ValueError(
                 "Error fetching landmark details: Multiple essential details are missing, possibly because the LLM model "
                 "is not trained on sufficient data for this landmark or the information is unavailable. "
