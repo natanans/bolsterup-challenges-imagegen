@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.1.0...v1.2.0) (2024-11-27)
+
+
+### Features
+
+* image to text pipeline added ([34098bc](https://github.com/natanans/bolsterup-challenges-imagegen/commit/34098bc840c8a4c689427e19148de63d5a9acf0d))
+
 # [1.1.0](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.0.0...v1.1.0) (2024-11-27)
 
 
