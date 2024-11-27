@@ -1,56 +1,43 @@
 import streamlit as st
-from openai import OpenAI
+from PIL import Image
+#from your_image_generator import generate_image_text  # Import your custom method
 
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
-)
+# Title and Instructions
+st.title("Image Generation from Text")
+st.info("""
+#### NOTE: 
+1. You can download the generated image by right-clicking on it and selecting "Save image as."
+2. Use the form below to generate images based on a text prompt.
+3. JSON links and captions will be displayed along with the images.
+""")
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# Form for user input
+with st.form(key='form'):
+    prompt = st.text_input(label='Enter a text prompt for image generation')
+    num_images = st.number_input('Enter the number of images to generate', min_value=1, max_value=5, value=1)
+    submit_button = st.form_submit_button(label='Generate Images')
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+def generate_image_text():
+    return "Asd"
+# Generate and display images
+if submit_button:
+    if prompt:
+        st.write(f"Generating {num_images} images for the prompt: **{prompt}**")
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+        for i in range(num_images):
+            try:
+                # Call your custom image generation function
+                image_path, image_caption, json_link = generate_image_text(prompt, image_index=i)
+                
+                # Open and display the generated image
+                image = Image.open(image_path)
+                st.image(image, caption=f"{image_caption}", use_column_width=True)
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+                # Display JSON link and caption
+                st.markdown(f"**Caption:** {image_caption}")
+                st.markdown(f"**JSON Data Link:** [View JSON](file://{json_link})")
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
-
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            except Exception as e:
+                st.error(f"Error generating image {i + 1}: {e}")
+    else:
+        st.warning("Please enter a prompt to generate images.")
