@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.2.1...v1.2.2) (2024-11-27)
+
+
+### Bug Fixes
+
+* carousel bug fixed ([959c86c](https://github.com/natanans/bolsterup-challenges-imagegen/commit/959c86ccadd4447a28ecb034e0bc90f3eef4e165))
+
 ## [1.2.1](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.2.0...v1.2.1) (2024-11-27)
 
 
