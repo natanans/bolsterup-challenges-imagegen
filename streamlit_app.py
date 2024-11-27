@@ -45,7 +45,7 @@ if submit_button:
                     images.append(image)
 
                     # Extract the image caption from landmark details
-                    image_caption = landmark_json.get('image_generation_prompt', f"Image {i + 1}")
+                    image_caption = "caption"#landmark_json.get('image_generation_prompt', f"Image {i + 1}")
                     captions.append(image_caption)
                     json_data_list.append(landmark_json)
 
