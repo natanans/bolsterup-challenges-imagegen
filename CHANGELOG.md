@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.3.0...v1.3.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* json detail added back ([a8e148e](https://github.com/natanans/bolsterup-challenges-imagegen/commit/a8e148e92788e9261133932bc7ededfd67aabeb5))
+
 # [1.3.0](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.2.2...v1.3.0) (2024-11-27)
 
 
