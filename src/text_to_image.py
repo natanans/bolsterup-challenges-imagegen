@@ -1,5 +1,4 @@
 import json
-import os
 
 from .models import LLMRetriever, ReplicateImageGenerator
 
@@ -14,7 +13,6 @@ class LandmarkProcessor:
         Initialize the LandmarkProcessor with API keys for LLMRetriever and ReplicateImageGenerator.
         """
     
-
         self.retriever = LLMRetriever(api_key)
         self.generator = ReplicateImageGenerator(api_token=replicate_api_token)
 
@@ -38,13 +36,20 @@ class LandmarkProcessor:
         landmark_json = json.loads(landmark_details.model_dump_json(indent=4))
 
        # Check for errors in the response
-        if "error" in landmark_json and landmark_json["error"]:
-            raise ValueError(f"Error fetching landmark details: {landmark_json['error']}")
+        if "error" in landmark_json:
+            error_message = landmark_json.get("error")
+            if error_message:
+                raise ValueError(f"Error fetching landmark details: {error_message}")
 
-        # Check for 'no_value' in more than one key
+        # Check for 'no_value' in more than one key to check for available model data on landmark
         no_value_count = sum(1 for key, value in landmark_json.items() if value == 'no_value')
         if no_value_count > 1:
-            raise ValueError(f"Error fetching landmark details: Multiple fields contain 'no_value'.")
+            raise ValueError(
+                "Error fetching landmark details: Multiple essential details are missing, possibly because the LLM model "
+                "is not trained on sufficient data for this landmark or the information is unavailable. "
+                "Please revise your input prompt to provide more specific or widely recognized details about the landmark "
+                "to improve the response and support image generation."
+            )
 
         # Build the image generation prompt using all relevant keys
         prompt_parts = [
@@ -76,4 +81,4 @@ class LandmarkProcessor:
                 "prompt": full_prompt
             }
         )
-        return output_path, landmark_details
+        return output_path, landmark_json
