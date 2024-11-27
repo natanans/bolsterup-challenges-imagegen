@@ -3,7 +3,7 @@ name: test
 on:
   push:
     branches:
-      - main
+      - semantic-release
 jobs:
   main:
     runs-on: ubuntu-latest
