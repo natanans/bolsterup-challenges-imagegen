@@ -2,6 +2,7 @@ from pydantic import BaseModel, ValidationError
 from typing import Optional, Union, List
 from groq import Groq
 import json
+import time
 
 
 class LandmarkResponse(BaseModel):
@@ -66,44 +67,52 @@ class LLMRetriever:
             or an error message if retrieval fails.
         """
         landmark_name = landmark_name + " json" # for grok json reterival
-        try:
-            chat_completion = self.groq.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are an assistant specialized in retrieving and analyzing landmark information. "
-                            "Provide a JSON response with the following keys and values:\n"
-                            "'description': A brief description of the landmark and its historical significance.\n"
-                            "'architects': Architects or designers responsible for its construction.\n"
-                            "'construction_year': Year it was built.\n"
-                            "'materials': Materials used in its construction.\n"
-                            "'interesting_facts': Interesting facts or historical anecdotes related to the landmark.\n"
-                            "'dimensions': Dimensions or unique features of the landmark.\n"
-                            "'construction_cost': Cost of construction.\n"
-                            "'cultural_significance': Cultural or historical significance.\n"
-                            "'geographical_location': Geographical location or significance of the landmark.\n"
-                            "'image_generation_prompt': Prompt for generating an image based on the user input. "
-                            "Use the above values to ensure accuracy and include the landmark name.\n"
-                            "If any information is missing, state it explicitly as 'no_value'."
-                        )
-                    },
-                    {
-                        "role": "user",
-                        "content": f"Landmark: {landmark_name}"
-                    }
-                ],
-                model="llama3-70b-8192",
-                temperature=0.7,
-                stream=False,
-                response_format={"type": "json_object"}
-            )
-            
-            # Validate and parse the response into a LandmarkResponse object
-            return LandmarkResponse.model_validate_json(json.loads(chat_completion.choices[0].message.content))
-        except ValidationError as e:
-            raise ValueError(f"Validation failed for the response: {e}") from e
-        except ValueError as ve:
-            raise ve
-        except Exception as e:
-            raise RuntimeError(f"An unexpected error occurred while fetching landmark details: {e}") from e
+        max_retries = 5  # Maximum number of retries
+        retry_delay = 2  # Delay between retries in seconds
+        for attempt in range(max_retries):
+            try:
+                chat_completion = self.groq.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are an assistant specialized in retrieving and analyzing landmark information. "
+                                "Provide a JSON response with the following keys and values:\n"
+                                "'description': A brief description of the landmark and its historical significance.\n"
+                                "'architects': Architects or designers responsible for its construction.\n"
+                                "'construction_year': Year it was built.\n"
+                                "'materials': Materials used in its construction.\n"
+                                "'interesting_facts': Interesting facts or historical anecdotes related to the landmark.\n"
+                                "'dimensions': Dimensions or unique features of the landmark.\n"
+                                "'construction_cost': Cost of construction.\n"
+                                "'cultural_significance': Cultural or historical significance.\n"
+                                "'geographical_location': Geographical location or significance of the landmark.\n"
+                                "'image_generation_prompt': Prompt for generating an image based on the user input. "
+                                "Use the above values to ensure accuracy and include the landmark name.\n"
+                                "If any information is missing, state it explicitly as 'no_value'."
+                            )
+                        },
+                        {
+                            "role": "user",
+                            "content": f"Landmark: {landmark_name}"
+                        }
+                    ],
+                    model="llama3-70b-8192",
+                    temperature=0.7,
+                    stream=False,
+                    response_format={"type": "json_object"}
+                )
+                
+                # Validate and parse the response into a LandmarkResponse object
+                return LandmarkResponse.model_validate_json(json.loads(chat_completion.choices[0].message.content))
+            except ValidationError as e:
+                raise ValueError(f"Validation failed for the response: {e}") from e
+            except ValueError as ve:
+                raise ve
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue  # Retry on generic exceptions
+                raise RuntimeError(
+                    f"An unexpected error occurred while fetching landmark details after {max_retries} attempts: {e}"
+                ) from e
