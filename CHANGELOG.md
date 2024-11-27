@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.2.0...v1.2.1) (2024-11-27)
+
+
+### Bug Fixes
+
+*  spinner added ([d85f2f7](https://github.com/natanans/bolsterup-challenges-imagegen/commit/d85f2f7bedb677bee97a6fc2439d63ec8b32d301))
+
 # [1.2.0](https://github.com/natanans/bolsterup-challenges-imagegen/compare/v1.1.0...v1.2.0) (2024-11-27)
 
 
