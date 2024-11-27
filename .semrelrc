@@ -12,12 +12,6 @@
         "emojis": "true"
       }
     },
-    "provider": {
-      "name": "gitlab",
-      "options": {
-        "gitlab_projectid": "123456"
-      }
-    },
     "files-updater": {
       "names": ["npm"]
     }
