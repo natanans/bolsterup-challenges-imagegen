@@ -29,6 +29,11 @@ class LandmarkProcessor:
         Raises:
             ValueError: If an error exists in the landmark retrieval response.
         """
+        
+
+        # Easter Egg: Uncomment the next line to cartoonify the image!
+        #landmark_name = landmark_name + ' make it cartoon and animated'
+
         # Fetch landmark details
         landmark_details = self.retriever.fetch_landmark_details(landmark_name)
 
