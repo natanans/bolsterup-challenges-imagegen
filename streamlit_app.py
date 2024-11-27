@@ -7,7 +7,6 @@ import io
 from src.text_to_image import LandmarkProcessor
 
 # Initialize the LandmarkProcessor with API keys
-# Initialize the LandmarkProcessor with API keys
 processor = LandmarkProcessor(
     api_key=os.getenv('LLMAPIKEY'), 
     replicate_api_token=os.getenv('REPLICATEAPIKEY')
@@ -89,8 +88,19 @@ if st.session_state.images:
         </div>
         '''
     html_code += '</div><div class="swiper-pagination"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div></div>'
+    
 
     st.components.v1.html(f"{swiper_css}{html_code}{swiper_js}", height=1150)
+    # Display landmark details
+    if st.session_state.json_data_list:
+        st.subheader("Landmark Details")
+        formatted_text = "\n\n".join(
+            f"**{key.capitalize()}**: {value}" 
+            for key, value in st.session_state.json_data_list[0].items() if key != "error"
+        )
+        st.markdown(formatted_text)
+
+    
 
     # Display JSON download button
     if st.session_state.json_data_list:
