@@ -259,5 +259,3 @@ For any questions or suggestions, please contact [natananshiferaw@gmail.com](mai
 This project is licensed under the MIT License.
 
 ---
-
-*Note: Replace `<natananshiferaw@gmail.com>` and `natananshiferaw@gmail.com` with the actual repository URL and your email address.*
